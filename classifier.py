@@ -12,3 +12,13 @@ import numpy as np
 
 a = Input((200, 400, 1))
 b = Input((200, 400, 1))
+
+model = Sequential()
+model.add(Conv2D(kernel_size=(5, 5), filters=20,input_shape=(200, 400, 1), activation='relu'))
+model.add(MaxPooling2D((2, 2)))
+model.add(Conv2D(kernel_size=(5, 5), filters=25, activation='relu'))
+model.add(MaxPooling2D((2, 2)))
+
+
+feat_map1 = model(b)
+feat_map2 = model(a)
