@@ -21,7 +21,6 @@ def create_array():
                 
                 f_name.append([int(filename[9:12]), int(filename[7:9]), int(filename[4:7])])
                 f_array.append(img.ravel())
-                print(img.size)
                 forged.append(np.concatenate([f_name, f_array], axis=1))
 
         """ if dirname[2:] == "genuine_scaled":
