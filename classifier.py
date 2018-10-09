@@ -25,10 +25,30 @@ feat_map2 = model(a)
 
 normalized_layer = Normalized_Correlation_Layer(stride=(1, 1), patch_size=(5, 5))([feat_map1, feat_map2])
 
-final_layer = Conv2D(kernel_size=(1, 1), filters=25,
-                     activation='relu')(normalized_layer)
-final_layer = Conv2D(kernel_size=(3, 3), filters=25,
-                     activation=None)(final_layer)
+final_layer = Conv2D(kernel_size=(1, 1), filters=25,activation='relu')(normalized_layer)
+final_layer = Conv2D(kernel_size=(3, 3), filters=25,activation=None)(final_layer)
 final_layer = MaxPooling2D((2, 2))(final_layer)
 final_layer = Dense(500)(final_layer)
 final_layer = Dense(2, activation="softmax")(final_layer)
+
+
+class Normalized_Correlation_Layer(Layer):
+#create a class inherited from keras.engine.Layer.
+
+	def __init__(self, patch_size=(5, 5),
+          dim_ordering='tf',
+          border_mode='same',
+          stride=(1, 1),
+          activation=None,
+          **kwargs):
+
+       if border_mode != 'same': 
+          raise ValueError('Invalid border mode for Correlation Layer ' 
+                     '(only "same" is supported as of now):', border_mode) 
+       self.kernel_size = patch_size 
+       self.subsample = stride 
+       self.dim_ordering = dim_ordering 
+       self.border_mode = border_mode 
+       self.activation = activations.get(activation) 
+       super(Normalized_Correlation_Layer, self).__init__(**kwargs)
+
