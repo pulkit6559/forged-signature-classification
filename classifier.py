@@ -52,3 +52,16 @@ class Normalized_Correlation_Layer(Layer):
        self.activation = activations.get(activation) 
        super(Normalized_Correlation_Layer, self).__init__(**kwargs)
 
+    def compute_output_shape(self, input_shape):
+        return(input_shape[0][0], input_shape[0][1], input_shape[0][2], self.kernel_size[0] * input_shape[0][2]*input_shape[0][-1])
+
+    def get_config(self): 
+        config = {'patch_size': self.kernel_size, 
+          'activation': self.activation.__name__, 
+          'border_mode': self.border_mode, 
+          'stride': self.subsample, 
+          'dim_ordering': self.dim_ordering} 
+        base_config = super(Correlation_Layer, self).get_config() 
+        return dict(list(base_config.items()) + list(config.items()))
+
+
