@@ -64,4 +64,9 @@ class Normalized_Correlation_Layer(Layer):
         base_config = super(Correlation_Layer, self).get_config() 
         return dict(list(base_config.items()) + list(config.items()))
 
+    input_1, input_2 = x 
+     stride_row, stride_col = self.subsample 
+     inp_shape = input_1._keras_shape
+
+
 
