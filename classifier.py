@@ -31,7 +31,7 @@ final_layer = MaxPooling2D((2, 2))(final_layer)
 final_layer = Dense(500)(final_layer)
 final_layer = Dense(2, activation="softmax")(final_layer)
 
-
+#creating a custom normalized layer layer
 class Normalized_Correlation_Layer(Layer):
 #create a class inherited from keras.engine.Layer.
 
