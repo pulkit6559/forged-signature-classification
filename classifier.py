@@ -101,3 +101,7 @@ for i in range(output_row, output_row+padding_row[1]):
        for j in range(output_col): 
            xc_2.append(K.reshape(input_2[:, i:i+ self.kernel_size[0], j:j+self.kernel_size[1], k], 
                        (-1, 1,self.kernel_size[0]*self.kernel_size[1]))) 
+
+block = K.concatenate(block, axis=1) 
+     block= K.reshape(block,(-1,output_row,output_col,inp_shape[2] *self.kernel_size[0])) 
+     output.append(block)
