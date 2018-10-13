@@ -87,3 +87,12 @@ for k in range(inp_shape[-1]):
                     (-1, 1,self.kernel_size[0]*self.kernel_size[1])))
 
 
+for i in range(output_row): 
+       slice_row = slice(i, i + self.kernel_size[0]) 
+       slice_row2 = slice(i + padding_row[0], i +self.kernel_size[0] + padding_row[0]) 
+       for j in range(output_col): 
+          slice_col = slice(j, j + self.kernel_size[1]) 
+          xc_2.append(K.reshape(input_2[:, slice_row2, slice_col, k], 
+                      (-1, 1,self.kernel_size[0]*self.kernel_size[1]))) 
+          xc_1.append(K.reshape(input_1[:, slice_row, slice_col, k], 
+                        (-1, 1,self.kernel_size[0]*self.kernel_size[1])))
