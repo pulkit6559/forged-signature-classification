@@ -64,9 +64,15 @@ class Normalized_Correlation_Layer(Layer):
         base_config = super(Correlation_Layer, self).get_config() 
         return dict(list(base_config.items()) + list(config.items()))
 
-    input_1, input_2 = x 
-     stride_row, stride_col = self.subsample 
-     inp_shape = input_1._keras_shape
+    def call(self, x, mask=None):
+        input_1, input_2 = x 
+        stride_row, stride_col = self.subsample 
+        inp_shape = input_1._keras_shape
+        padding_row = (int(self.kernel_size[0] / 2),int(self.kernel_size[0] / 2)) 
+        padding_col = (int(self.kernel_size[1] / 2),int(self.kernel_size[1] / 2)) 
+        input_1 = K.spatial_2d_padding(input_1, padding =(padding_row,padding_col)) 
+        input_2 = K.spatial_2d_padding(input_2, padding = ((padding_row[0]*2, padding_row[1]*2),padding_col)) 
+
 
 
 
