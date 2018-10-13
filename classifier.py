@@ -74,5 +74,16 @@ class Normalized_Correlation_Layer(Layer):
         input_2 = K.spatial_2d_padding(input_2, padding = ((padding_row[0]*2, padding_row[1]*2),padding_col)) 
 
 
+output_row = output_shape[1] 
+output_col = output_shape[2] 
+
+output = [] 
+for k in range(inp_shape[-1]):
+    xc_1 = [] 
+    xc_2 = [] 
+    for i in range(padding_row[0]): 
+    for j in range(output_col): 
+        xc_2.append(K.reshape(input_2[:, i:i+self.kernel_size[0], j:j+self.kernel_size[1], k], 
+                    (-1, 1,self.kernel_size[0]*self.kernel_size[1])))
 
 
