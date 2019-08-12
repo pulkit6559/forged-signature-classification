@@ -75,7 +75,7 @@ model.summary()
 optimizer = Adam(lr = 0.00006)
 model.compile(loss="binary_crossentropy",optimizer=optimizer)
 
-# Load (x_train and y_train)
+########### Load (x_train and y_train) #################
 
 def get_batch(batch_size,s="train"):
     """Create batch of n pairs, half same class, half different class"""
