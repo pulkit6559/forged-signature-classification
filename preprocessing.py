@@ -7,7 +7,6 @@ from numpy import array
 import operator
 path = './'
 
-#read = lambda imname: np.asarray(Image.open(imname).convert("LA"))
 f_name = []
 f_array = []
 g_name = []
@@ -21,19 +20,6 @@ def homogenize(img):
     width = img.size[0]
     img = np.array(img)
     print(width , height)
-    """ if height<baseheight:
-        padding = int((baseheight - height)/2)
-        pix = np.sum(img[0, :])/(width)
-        pad = np.ones([padding, width])*pix
-        img = np.concatenate((pad , img, pad), axis=0)
-        height = height + 2*padding """
-    
-    """ if width < basewidth:
-        padding = int((basewidth - width)/2)
-        pix = np.sum(img[:, 0])/(height)
-        pad = np.ones([height, padding])*pix
-        img = np.concatenate((pad , img, pad), axis=1)
-        width = width + 2*padding """
 
     if width/height<2:
         n_width = 2*height
@@ -53,6 +39,7 @@ def homogenize(img):
         return np.concatenate((pad, img, pad), axis=0)
     else :
         return img
+
 
 def crop(img):
     height = img.size[1]
@@ -170,23 +157,3 @@ if __name__ == '__main__':
     create_dir()
     #f_name.sort(key=operator.itemgetter(0, 1))
     #print(genuine)
-
-
-
-
-#f_by = f_name[:,4:8]
-#f_of = f_name[:,10:-4]
-#f_num = f_name[:8:10]
-#forged = np.concatenate((f_by,f_of,f_num), axis = 1)
-#np.savetxt('forged.csv', f_array, fmt='%.2f', delimiter=',')
-#np.savetxt('f_name.csv', forged, fmt='%.2f', delimiter=',')
-
-#np.savetxt("forged.csv", arr, delimiter=",")
-
-#THE CODE BELOW WORKS
-#l = np.zeros([2])
-#l = int(np.sqrt(arr.shape[1:2]))
-#l = int(np.sqrt(f_array.shape[1]))
-#plt.imshow(f_array.reshape(l[0],l[1]), cmap='gray')
-
-#plt.show()
