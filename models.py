@@ -33,7 +33,7 @@ class SiameseNetworkWithContrastiveLoss(nn.Module):
         # Forward pass through the CNN
         x = self.cnn(x)
         # Flatten the tensor for the fully connected layers
-        print(x.shape)
+        # print(x.shape)
         x = x.view(x.size()[0], -1)
         # Forward pass through the fully connected layers
         x = self.fc(x)
