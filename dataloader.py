@@ -90,7 +90,6 @@ class SignatureContrastiveDataset(Dataset):
         
         return image_pairs, targets
     
-    
     def __len__(self):
         return len(self.targets)
 
@@ -122,8 +121,71 @@ class SignatureTripletDataset(Dataset):
     """
 
     def __init__(self, data_path="None"):
-        pass
+        assert data_path != None
+        
+        self.data_path = data_path
+        self.triplets, self.targets = self.load_images(self.data_path)
 
+    def load_images(self, data_path):
+        
+        def get_sign_ids(imgname):
+            """ Parses an image filename to extract owner, signature ID, and signee information."""
+
+            assert imgname.startswith("NFI-")
+            imgname = imgname.lower().split('-')[1].split(".png")[0]
+            # print(imgname)
+            signee = imgname[:3]
+            sign_id = int(imgname[3:-3])
+            owner = imgname[-3:]
+            return owner, sign_id, signee
+        
+        def permute_triplets(valid_dict, invalid_dict):
+            """ Creates triplets of genuine, anchor and forged signature images and assigns labels. """
+            perm_img_pths = []
+            perm_img_labels = []
+            for auth, val_imgs in valid_dict.items():
+                for a_val_id, a_val_pth in val_imgs.items(): #anchors
+                    for p_val_id, p_val_pth in val_imgs.items(): # positives
+                        if a_val_id!=p_val_id:
+                            for n_val_id, n_val_pth in invalid_dict[auth].items(): # negatives
+                                perm_img_pths.append([p_val_pth, a_val_pth, n_val_pth])
+                                perm_img_labels.append([1, 0]) # label is set to 0 for forged
+                                
+                                # perm_img_pths.append([n_val_pth, a_val_pth, p_val_pth])
+                                # perm_img_labels.append([0, 1]) # label is set to 0 for forged
+            return perm_img_pths, perm_img_labels
+
+        valid_signs_dir = 'genuine_bin'
+        invalid_signs_dir = 'forged_bin'
+        
+        valid_imgs = defaultdict(dict)
+        invalid_imgs = defaultdict(dict)
+        
+        for filename in os.listdir(os.path.join(data_path, valid_signs_dir)):
+            owner, sign_id, signee = get_sign_ids(filename)
+            valid_imgs[owner][sign_id] = os.path.join(valid_signs_dir, filename)
+        for filename in os.listdir(os.path.join(data_path, invalid_signs_dir)):
+            owner, sign_id, signee = get_sign_ids(filename)
+            invalid_imgs[owner][sign_id] = os.path.join(invalid_signs_dir, filename)
+        
+        triplets, targets = permute_triplets(valid_imgs, invalid_imgs)
+        return triplets, targets
+    
+    def __len__(self):
+        return len(self.targets)
+
+    def __getitem__(self, idx):
+        img1_pth, img2_pth, img3_pth = self.triplets[idx]
+        img1_pth, img2_pth, img3_pth = os.path.join(self.data_path, img1_pth), os.path.join(self.data_path, img2_pth), os.path.join(self.data_path, img3_pth)
+        img1 = transforms.functional.to_tensor(Image.open(img1_pth).convert('L'))
+        img2 = transforms.functional.to_tensor(Image.open(img2_pth).convert('L'))
+        img3 = transforms.functional.to_tensor(Image.open(img3_pth).convert('L'))
+        
+        y = self.targets[idx]
+        # y = torch.from_numpy(np.array([target], dtype=np.float32))
+        
+        return (img1, img2, img3, y)
+        
 
 if __name__ == '__main__':
     data_path = 'dataset/'
